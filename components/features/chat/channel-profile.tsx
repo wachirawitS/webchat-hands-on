@@ -1,11 +1,11 @@
 'use client'
 
+import { useChannelStore } from '@/shared/stores/channel.store'
 import { useEffect, useState } from 'react'
 
 
 const ChannelProfile = () => {
-  // const [profile, setProfile] = useState<ChannelData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { profile } = useChannelStore();
 
   // useEffect(() => {
   //   const fetchProfile = async () => {
@@ -31,18 +31,18 @@ const ChannelProfile = () => {
 
   return (
     <div className="flex items-center gap-3">
-      {/* {profile.pictureUrl && (
+      {profile?.pictureUrl && (
         <img
           src={profile.pictureUrl}
           alt={profile.displayName ?? 'Channel'}
           className="h-10 w-10 rounded-full"
         />
-      )} */}
+      )}
       <div>
-        {/* <div className="font-semibold">{profile.displayName ?? 'LINE OA'}</div> */}
-        {/* {profile.basicId && (
-          <div className="text-sm text-muted-foreground">{profile.basicId}</div>
-        )} */}
+        <div className="font-medium">{profile?.displayName ?? 'LINE OA'}</div>
+        {profile?.basicId && (
+          <div className="text-sm font-light text-muted-foreground">{profile.basicId}</div>
+        )}
       </div>
     </div>
   )

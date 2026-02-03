@@ -1,5 +1,5 @@
-import LoginLine from "@/components/features/auth/login-line";
+import ChatCard from "@/components/features/chat/chat-card";
 
 export default function Home() {
-  return <LoginLine />;
+  return <ChatCard />;
 }

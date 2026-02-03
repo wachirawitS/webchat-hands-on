@@ -1,34 +1,77 @@
 "use client";
-
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuthStore } from "@/shared/stores/auth.store";
 import ChannelProfile from "./channel-profile";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { ArrowUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { messageService } from "@/shared/services/message.service";
+import { toast } from "sonner";
 
 const ChatCard = () => {
-  const { profile } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
+  
+  const sendMessage = async () => {
+    if (!message || !userId) return;
+    setIsLoading(true);
+    try {
+      await messageService.pushMessage(userId, message);
+      setMessage("");
+    } catch (error) {
+      toast.error("Failed to send message");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <Card className="w-full max-w-lg">
+    <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>
-          <ChannelProfile/>
+          <ChannelProfile />
         </CardTitle>
-        <CardDescription>
-          {profile?.displayName ?? "No profile data"}
-        </CardDescription>
-        {/* <CardAction>{profile?.userId ?? ""}</CardAction> */}
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <div className="h-96 overflow-y-auto border rounded-lg"></div>
+      </CardContent>
       <CardFooter>
-        <p>{profile?.statusMessage ?? ""}</p>
+        <InputGroup>
+          <InputGroupInput
+            value={message || ""}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            placeholder="Type a message..."
+            disabled={isLoading}
+          />
+          <InputGroupAddon align="inline-end">
+            <Button
+              onClick={sendMessage}
+              type="button"
+              variant={"ghost"}
+              size={"xs"}
+              disabled={isLoading}
+            >
+              <ArrowUp />
+            </Button>
+          </InputGroupAddon>
+        </InputGroup>
       </CardFooter>
     </Card>
   );

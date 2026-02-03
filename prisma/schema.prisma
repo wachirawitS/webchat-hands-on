@@ -1,0 +1,28 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  lineUserId String  @unique
+  displayName String
+  pictureUrl  String
+}
+
+model ChatMessage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  toUserId  String
+  fromUserId String
+  chatId    String // client line id + user id
+  message   String
+  timestamp DateTime @default(now())
+
+  @@index([chatId])
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const sarabun = Sarabun({
   variable: "--font-sarabun",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <div className="antialiased flex min-h-screen min-w-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black px-4">
           {children}
         </div>
+        <Toaster richColors />
       </body>
     </html>
   );
