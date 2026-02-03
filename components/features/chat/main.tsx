@@ -8,6 +8,7 @@ import { chatService } from '@/shared/services/chat.service'
 import Chat from './chat'
 import { useState } from 'react'
 import ChatSheet from './chat-sheet'
+import Resources from '../resources/resources'
 
 const MainChatPage = () => {
   const [forceRefresh, setForceRefresh] = useState(false)
@@ -17,7 +18,11 @@ const MainChatPage = () => {
   }
   return (
     <div className="h-full flex flex-col gap-2.5">
-      <div className='h-fit flex justify-between'>
+      <div className='space-y-2 sm:hidden'>
+        <p className="text-xl font-bold">Hands On Web Chat</p>
+        <Resources />
+      </div>
+      <div className="h-fit flex justify-between">
         <div className="flex gap-2.5">
           <Avatar>
             <AvatarImage src={chat?.roomProfileUrl} alt="@evilrabbit" />
@@ -29,7 +34,7 @@ const MainChatPage = () => {
             <span className="text-xs text-green-500">online</span>
           </div>
         </div>
-        <ChatSheet/>
+        <ChatSheet />
       </div>
       <Chat forceRefresh={forceRefresh} />
       <ChatInput

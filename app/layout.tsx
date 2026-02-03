@@ -4,6 +4,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 import ChatRooms from '@/components/features/chat/chat-rooms'
 import ChatSheet from '@/components/features/chat/chat-sheet'
+import Resources from '@/components/features/resources/resources'
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
@@ -26,7 +27,10 @@ export default function RootLayout({
       <body className={`${sarabun.className}`}>
         <div className="antialiased bg-zinc-50 h-screen w-screen flex sm:items-center sm:justify-center">
           <div className="mx-auto w-full max-w-4xl px-4 py-4 space-y-4">
-            {/* <p className='text-xl text-primary font-bold'>Hands On Web Chat</p> */}
+            <div className='space-y-4 hidden sm:block'>
+              <p className="text-xl font-bold">Hands On Web Chat</p>
+              <Resources />
+            </div>
             <div className="h-full sm:h-180 flex gap-4">
               <div className="w-fit h-full hidden sm:block">
                 <ChatRooms />
