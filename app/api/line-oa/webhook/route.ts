@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { LineWebhookBody } from '@/shared/interfaces/line-webhook.interface'
 import { IProfile } from '@/shared/interfaces/profile.interface'
 import { prisma } from '@/lib/prisma'
+import { MessageSource } from '@/shared/enums/message.enum'
 
 export async function POST(req: NextRequest) {
   const channelSecret = process.env.LINE_CHANNEL_SECRET
@@ -22,44 +23,35 @@ export async function POST(req: NextRequest) {
   for (const event of webhookData.events) {
     if (event.type === 'message' && event.message?.type === 'text') {
       const userId = event.source?.userId
-      const text = event.message.text;
+      const text = event.message.text
       if (!userId || !text) continue
-      await handleUserProfile(userId);
-      await handleChatMessage(userId, text)
+      const chatKey = userId
+
+      const profile: IProfile = await getLineUserProfile(userId);
+      await prisma.chat.upsert({
+        where: { key: chatKey },
+        update: {
+          title: profile.displayName,
+          roomProfileUrl: profile.pictureUrl,
+        },
+        create: {
+          key: chatKey,
+          title: profile.displayName,
+          roomProfileUrl: profile.pictureUrl,
+        },
+      });
+
+      await prisma.message.create({
+        data: {
+          chatKey: chatKey,
+          message: text,
+          source: MessageSource.USER
+        }
+      })
     }
   }
 
   return NextResponse.json({ success: true })
-}
-
-// Handle fetching and storing user profile
-const handleUserProfile = async (userId: string) => {
-  const profile: IProfile = await getLineUserProfile(userId)
-  await prisma.user.upsert({
-    where: { lineUserId: userId },
-    update: {
-      displayName: profile.displayName,
-      pictureUrl: profile.pictureUrl,
-    },
-    create: {
-      lineUserId: userId,
-      displayName: profile.displayName,
-      pictureUrl: profile.pictureUrl,
-    },
-  });
-}
-
-const handleChatMessage = async (userId: string, text: string) => {
-  const chatId = `HANDS-ON-${userId}`;
-  await prisma.chatMessage.create({
-    data: {
-      fromUserId: userId,
-      toUserId: chatId,
-      chatId: chatId,
-      message: text,
-      timestamp: new Date(),
-    },
-  });
 }
 
 const getLineUserProfile = async (userId: string) => {

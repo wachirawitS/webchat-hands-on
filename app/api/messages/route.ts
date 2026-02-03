@@ -1,43 +1,12 @@
-import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl;
-  const chatId = searchParams.get("chatId");
-  const limit = searchParams.get("limit");
-  const before = searchParams.get("before");
-
-  if (!chatId) {
-    return NextResponse.json({ error: "missing_chatId" }, { status: 400 });
-  }
-
-  const messages = await prisma.chatMessage.findMany({
-    where: {
-      chatId,
-      ...(before && {
-        timestamp: {
-          lt: new Date(before),
-        },
-      }),
-    },
-    orderBy: { timestamp: "desc" },
-    take: limit ? parseInt(limit) : 20,
-  });
-
-  // Reverse เพื่อให้ข้อความเก่าอยู่ข้างบน
-  const sortedMessages = messages.reverse();
-
-  return NextResponse.json({
-    messages: sortedMessages,
-    hasMore: messages.length === (limit ? parseInt(limit) : 20),
-  });
-}
+import { prisma } from '@/lib/prisma'
+import { MessageSource } from '@/shared/enums/message.enum'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
-  const { lineUserId, text } = await req.json();
+  const { to, text } = await req.json()
 
-  if (!lineUserId || !text) {
-    return new Response('missing_parameters', { status: 400 });
+  if (!to || !text) {
+    return new Response('missing_parameters', { status: 400 })
   }
 
   const res = await fetch('https://api.line.me/v2/bot/message/push', {
@@ -47,7 +16,7 @@ export async function POST(req: Request) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      to: lineUserId,
+      to: to,
       messages: [{ type: 'text', text }],
     }),
   })
@@ -59,16 +28,33 @@ export async function POST(req: Request) {
   }
 
   // save chat to db
-  const chatId = `HANDS-ON-${lineUserId}`
-  await prisma.chatMessage.create({
+  await prisma.message.create({
     data: {
-      fromUserId: chatId,
-      toUserId: lineUserId,
-      chatId: chatId,
+      chatKey: to,
       message: text,
-      timestamp: new Date(),
+      source: MessageSource.ADMIN,
     },
+  })
+
+  return new Response('OK')
+}
+
+export async function GET(req: NextRequest) {
+  const { searchParams } = req.nextUrl
+  const chatKey = searchParams.get('chatKey')
+
+  if (!chatKey) {
+    return NextResponse.json({ error: 'missing_chatKey' }, { status: 400 })
+  }
+
+  const messages = await prisma.message.findMany({
+    where: {
+      chatKey: chatKey,
+    },
+    orderBy: { createdAt: 'asc' },
   });
 
-  return new Response('OK');
+  return NextResponse.json({
+    messages: messages,
+  })
 }

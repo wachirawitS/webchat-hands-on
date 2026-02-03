@@ -9,20 +9,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Chat {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  lineUserId String  @unique
-  displayName String
-  pictureUrl  String
+  key   String  @unique
+  title String
+  roomProfileUrl String?
+  createdAt DateTime @default(now())
 }
 
-model ChatMessage {
+model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  toUserId  String
-  fromUserId String
-  chatId    String // client line id + user id
+  chatKey   String
   message   String
-  timestamp DateTime @default(now())
+  source    String
+  createdAt DateTime @default(now())
 
-  @@index([chatId])
+  @@index([chatKey])
 }
