@@ -2,12 +2,12 @@
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 model Chat {
