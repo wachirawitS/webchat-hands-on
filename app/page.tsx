@@ -1,5 +1,5 @@
-import ChatCard from "@/components/features/chat/chat-card";
+import MainChatPage from '@/components/features/chat/main'
 
 export default function Home() {
-  return <ChatCard />;
+  return <MainChatPage />
 }

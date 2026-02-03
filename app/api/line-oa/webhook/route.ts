@@ -33,11 +33,13 @@ export async function POST(req: NextRequest) {
         update: {
           title: profile.displayName,
           roomProfileUrl: profile.pictureUrl,
+          lastMessage: text,
         },
         create: {
           key: chatKey,
           title: profile.displayName,
           roomProfileUrl: profile.pictureUrl,
+          lastMessage: text,
         },
       });
 

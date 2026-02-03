@@ -14,7 +14,9 @@ model Chat {
   key   String  @unique
   title String
   roomProfileUrl String?
+  lastMessage String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Message {

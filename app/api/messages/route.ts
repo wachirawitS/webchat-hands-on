@@ -34,7 +34,12 @@ export async function POST(req: Request) {
       message: text,
       source: MessageSource.ADMIN,
     },
-  })
+  });
+
+  await prisma.chat.update({
+    where: { key: to },
+    data: { lastMessage: text },
+  });
 
   return new Response('OK')
 }
