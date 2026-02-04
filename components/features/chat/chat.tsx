@@ -15,28 +15,39 @@ const Chat = ({ forceRefresh }: Props) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
+  const isInitialLoadRef = useRef(true)
 
-  const initPage = async () => {
-    if (isLoading) return
+  const initPage = async (isInitial = false) => {
     if (!chat) return
-    setIsLoading(true)
+    
+    if (isInitial) {
+      setIsLoading(true)
+    }
+    
     try {
       const data = await chatService.getMessagesByChatKey(chat.key)
       setMessages(data.messages)
     } catch (error) {
       toast.error('Failed to load chats.')
     } finally {
-      setIsLoading(false)
+      if (isInitial) {
+        setIsLoading(false)
+      }
     }
   }
 
   useEffect(() => {
     if (!chat) return
 
-    initPage()
+    if (isInitialLoadRef.current) {
+      initPage(true)
+      isInitialLoadRef.current = false
+    } else {
+      initPage(false)
+    }
 
     const interval = setInterval(() => {
-      initPage()
+      initPage(false)
     }, 5000)
 
     return () => clearInterval(interval)
