@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useChatStore } from '@/shared/stores/chat.store'
 import { chatService } from '@/shared/services/chat.service'
-import { Loader, LoaderCircle } from 'lucide-react'
+import { LoaderCircle } from 'lucide-react'
 
 type Props = {
   forceRefresh?: boolean
@@ -39,18 +39,19 @@ const Chat = ({ forceRefresh }: Props) => {
   useEffect(() => {
     if (!chat) return
 
-    if (isInitialLoadRef.current) {
-      initPage(true)
-      isInitialLoadRef.current = false
-    } else {
-      initPage(false)
-    }
+    // Reset to show loading when chat changes
+    isInitialLoadRef.current = true
+    
+    initPage(true)
 
     const interval = setInterval(() => {
       initPage(false)
     }, 5000)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      isInitialLoadRef.current = false
+    }
   }, [chat?.key, forceRefresh])
 
   useEffect(() => {
