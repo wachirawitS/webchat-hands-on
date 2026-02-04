@@ -3,16 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useChatStore } from '@/shared/stores/chat.store'
 import { chatService } from '@/shared/services/chat.service'
-import { IMessage } from '@/shared/interfaces/chat.interface'
 
 type Props = {
   forceRefresh?: boolean
 }
 
 const Chat = ({ forceRefresh }: Props) => {
-  const [messages, setMessages] = useState<IMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { chat } = useChatStore()
+  const { chat, messages, setMessages } = useChatStore()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)

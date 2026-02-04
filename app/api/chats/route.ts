@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const chats = await prisma.chat.findMany({
-    orderBy: { updatedAt: 'asc' },
+    orderBy: { updatedAt: 'desc' },
   })
 
   return NextResponse.json({

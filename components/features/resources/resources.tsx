@@ -12,7 +12,7 @@ const Resources = () => {
           <MessageCircle />
           Line OA
         </Button>
-        <Button size="sm" variant="outline">
+        <Button onClick={() => window.open('https://github.com/wachirawitS/webchat-hands-on', '_blank')} size="sm" variant="outline">
           <Github fill="" />
           Git Hub
         </Button>

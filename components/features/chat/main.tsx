@@ -1,7 +1,6 @@
 'use client'
 
 import { useChatStore } from '@/shared/stores/chat.store'
-import ChatNonSelected from './chat-non-selected'
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import ChatInput from './chat-input'
 import { chatService } from '@/shared/services/chat.service'
@@ -13,7 +12,7 @@ import Image from 'next/image'
 
 const MainChatPage = () => {
   const [forceRefresh, setForceRefresh] = useState(false)
-  const { chat } = useChatStore()
+  const { chat, pushMessage } = useChatStore()
   return (
     <div className="h-full flex flex-col gap-2.5">
       <div className="space-y-2 sm:hidden">
@@ -50,8 +49,15 @@ const MainChatPage = () => {
         <ChatInput
           onSendMessage={async (message) => {
             if (!chat) return
+            pushMessage({
+              id: Date.now().toString(),
+              chatKey: chat.key,
+              createdAt: new Date().toISOString(),
+              message,
+              source: 'admin'
+            })
             await chatService.pushMessage(chat.key, message)
-            setForceRefresh((prev) => !prev)
+            // setForceRefresh((prev) => !prev)
           }}
         />
       )}
