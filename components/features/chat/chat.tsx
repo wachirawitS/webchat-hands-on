@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useChatStore } from '@/shared/stores/chat.store'
 import { chatService } from '@/shared/services/chat.service'
+import { Loader, LoaderCircle } from 'lucide-react'
 
 type Props = {
   forceRefresh?: boolean
@@ -52,6 +53,14 @@ const Chat = ({ forceRefresh }: Props) => {
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current
     const isBottom = scrollHeight - scrollTop - clientHeight < 50
     setIsAtBottom(isBottom)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex justify-center items-center">
+        <LoaderCircle className='animate-spin text-gray-500'  />
+      </div>
+    )
   }
 
   return (
