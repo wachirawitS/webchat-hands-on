@@ -11,6 +11,9 @@ The app works as a web-based admin chat console that can:
 
 This project is suitable as a workshop example, starter project, or base for building an inbox or customer support dashboard.
 
+## Flow Diagram
+![Line Chat Hands-on Flow](./public/line-chat-hand-on-flow.png)
+
 ## Features
 
 - display chat rooms and the latest message
