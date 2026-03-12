@@ -1,5 +1,5 @@
 # Webchat Hands-on
-
+**Live Demo**: [link](https://webchat-hands-on-idgr.vercel.app/)
 A sample web chat project connected to LINE Official Account (LINE OA) using Next.js App Router, Prisma, and MongoDB.
 
 The app works as a web-based admin chat console that can:
@@ -11,9 +11,6 @@ The app works as a web-based admin chat console that can:
 
 This project is suitable as a workshop example, starter project, or base for building an inbox or customer support dashboard.
 
-## Flow Diagram
-![Line Chat Hands-on Flow](./public/line-chat-hand-on-flow.png)
-
 ## Features
 
 - display chat rooms and the latest message
@@ -23,6 +20,9 @@ This project is suitable as a workshop example, starter project, or base for bui
 - fetch LINE OA profile information through an internal API
 - use Zustand for client-side chat and message state
 - refresh rooms and messages every 5 seconds using polling
+
+## Flow Diagram
+![Line Chat Hands-on Flow](./public/line-chat-hand-on-flow.png)
 
 ## Tech Stack
 
